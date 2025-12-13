@@ -4,11 +4,9 @@ from datetime import datetime
 import webbrowser
 import urllib.parse
 import subprocess
-from pytube import Search
 import pyautogui
 import time
 import pywhatkit
-import glob
 import threading
 from speechfunctions import speak
 

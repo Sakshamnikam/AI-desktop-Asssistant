@@ -1,4 +1,3 @@
-conversation_history = []   # This ensures a fresh chat every run
 from groq import Groq
 from config import GROQ_API_KEY, conversation_history
 

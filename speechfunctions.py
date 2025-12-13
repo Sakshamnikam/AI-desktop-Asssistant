@@ -1,6 +1,5 @@
 import speech_recognition as sr
 import pyttsx3
-import time
 
 # No global engine — we create a fresh one every time
 # Windows engine gets stuck after first run if reused

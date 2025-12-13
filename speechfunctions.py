@@ -28,8 +28,8 @@ def listen() -> str:
     r = sr.Recognizer()
     r.energy_threshold = 400
     r.dynamic_energy_threshold = True
-    r.pause_threshold = 0.8
-    r.non_speaking_duration = 0.5
+    r.pause_threshold = 1.5
+    r.non_speaking_duration = 0.7
 
     with sr.Microphone() as source:
         print("Listening...")

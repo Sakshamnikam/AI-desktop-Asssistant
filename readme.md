@@ -114,8 +114,7 @@ Say **"bye"** or **"quit"** to exit.
 * "Close Current Window"
 * "Open Notepad"
 
-* Pixel can answer and General Knowledge questions
-For ex- What is artificial intelligence?"
+* Pixel can answer and General Knowledge questions for ex- What is artificial intelligence?"
 
 ---
 

@@ -106,7 +106,7 @@ Say **"bye"** or **"quit"** to exit.
 * "Open Chrome"
 * "Search Google for"
 * "Open Command Prompt"
-* "Increase volume"
+* "Increase/Decrease/Mute volume "
 * "Take a screenshot"
 * "Set a timer for 10 minutes"
 * "Create file named (file name) on desktop"

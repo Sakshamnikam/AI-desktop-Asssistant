@@ -42,11 +42,14 @@ def handle_query(q):
     return ask_ai(q)
 
 # 🔹 GUI WILL CALL THIS
-def run_assistant():
+def run_assistant(log_callback=None):
     global assistant_running
     assistant_running = True
 
     calibrate_mic()
+
+    if log_callback:
+        log_callback("Pixel: Hi, I am Pixel!")
     speak("Hi, I am Pixel!")
 
     while assistant_running:
@@ -54,13 +57,23 @@ def run_assistant():
         if not query:
             continue
 
+        if log_callback:
+            log_callback(f"You: {query}")
+
         if "quit" in query or "bye" in query:
+            if log_callback:
+                log_callback("Pixel: Goodbye!")
             speak("Goodbye!")
             assistant_running = False
             break
 
         response = handle_query(query)
+
+        if log_callback:
+            log_callback(f"Pixel: {response}")
+
         speak(response)
+
 
 # 🔹 GUI STOP BUTTON
 def stop_assistant():

@@ -68,7 +68,7 @@ AI_desktop_Assistant/
 Install all dependencies using:
 
 ```bash
-pip install speechrecognition pyttsx3 pyautogui python-dotenv groq pywhatkit pytube
+pip install speechrecognition pyttsx3 pyautogui python-dotenv groq pywhatkit pytube customtkinter
 ```
 
 ---
@@ -108,6 +108,7 @@ Say **"bye"** or **"quit"** to exit.
 * "Open Command Prompt"
 * "Increase/Decrease/Mute volume "
 * "Take a screenshot"
+* "Open LinkedIn"
 * "Set a timer for 10 minutes"
 * "Create file named (file name) on desktop"
 * "Play (Vidoe name) on YouTube"
@@ -131,8 +132,7 @@ Say **"bye"** or **"quit"** to exit.
 
 * Wake word support ("Hey Pixel")
 * Linux & macOS support
-* GUI interface
-* App control (Spotify, VS Code)
+* App control (VS Code)
 * Persistent conversation memory
 
 ---

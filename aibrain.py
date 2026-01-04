@@ -41,4 +41,6 @@ def ask_ai(question):
         return message
 
     except Exception as e:
-        return f"Error processing your request."
+        print("AI ERROR:", e)
+        return "AI service is unavailable. Check API key or internet."
+

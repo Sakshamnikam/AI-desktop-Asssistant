@@ -47,7 +47,7 @@ def listen() -> str:
         return query
 
     except sr.UnknownValueError:
-        return ""   # ⬅️ ignore background noise silently
+        return "__unrecognized__"   # ⬅️ ignore background noise silently
 
     except sr.RequestError:
         print("Internet error — speech recognition unavailable.")

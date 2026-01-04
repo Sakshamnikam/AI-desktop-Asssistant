@@ -11,3 +11,4 @@ recognizer = sr.Recognizer()
 
 # Conversation memory list
 conversation_history = []
+

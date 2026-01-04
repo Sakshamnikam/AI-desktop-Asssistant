@@ -60,7 +60,11 @@ def handle_query(q):
 
     if "open linkedin" in q:
         return open_linkedin()
+    
+    if "open" in q and ("folder" in q or "drive" in q):
+        return open_folder(q)
 
+   
     # ✅ FALLBACK → GENERAL KNOWLEDGE / AI
     return ask_ai(q)
 

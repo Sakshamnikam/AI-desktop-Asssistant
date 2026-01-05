@@ -144,8 +144,8 @@ def create_file(query):
         "desktop": fr"C:\Users\{username}\Desktop",
         "documents": fr"C:\Users\{username}\Documents",
         "downloads": fr"C:\Users\{username}\Downloads",
-        "c drive": r"C:",
-        "d drive": r"D:",
+        "c drive": r"C:\\",
+        "d drive": r"D:\\",
     }
 
     folder_path = None

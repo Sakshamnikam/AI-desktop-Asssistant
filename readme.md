@@ -20,6 +20,7 @@ You can say commands like:
 * Take screenshots
 * Open Command Prompt
 * Close current window
+* Open Any Folder or Drive
 
 ### ⏱️ Utility Commands
 

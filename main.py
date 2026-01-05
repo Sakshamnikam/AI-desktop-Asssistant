@@ -10,7 +10,7 @@ def handle_query(q):
     q = q.lower().strip()
 
     # ----- CAPABILITIES -----
-    if "what can you do" in q or "what all can you do" in q:
+    if "what can you do" in q or "what all can you do" in q :
         return what_can_you_do()
 
     # ----- SYSTEM COMMANDS -----

@@ -90,7 +90,7 @@ GROQ_API_KEY=your_groq_api_key_here
 ## ▶️ How to Run
 
 ```bash
-python main.py
+python gui.py
 ```
 
 Pixel will:

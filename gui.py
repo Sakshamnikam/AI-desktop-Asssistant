@@ -81,7 +81,9 @@ def add_message(text, sender="pixel"):
             pady=10
         )
         bubble.pack(anchor="w", padx=12)
-
+        
+    chat_container.update_idletasks()
+    chat_container._parent_canvas.yview_moveto(1.0)
 # Welcome message (IMPORTANT)
 add_message("Hi! I am Pixel 🤖\nHow can I help you today?", "pixel")
 

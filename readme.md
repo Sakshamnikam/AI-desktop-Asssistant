@@ -117,7 +117,8 @@ Say **"bye"** or **"quit"** to exit.
 * "Close Current Window"
 * "Open Notepad"
 * "Open Spotify"
-
+* "Turn on Camera"
+* "Click photo"
 * Pixel can answer any General Knowledge questions for ex- What is artificial intelligence?"
 
 ---

@@ -48,8 +48,9 @@ def handle_query(q):
     if "timer" in q:
         return set_timer(q)
 
-    if "create file" in q:
+    if "create" in q:
         return create_file(q)
+
 
     # 🔴 FIXED: Google search ONLY when user explicitly asks to search
     if q.startswith("google ") or q.startswith("search "):

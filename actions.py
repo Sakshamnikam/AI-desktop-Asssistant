@@ -113,61 +113,55 @@ def set_timer(query):
 def create_file(query):
     q = query.lower()
 
-    # 1️⃣ Extract filename
-    # expected patterns: "file named X", "file called X", "create X"
-    name = None
-    if "named" in q:
-        name = q.split("named")[-1].strip()
-    elif "called" in q:
-        name = q.split("called")[-1].strip()
-    else:
-        # fallback pattern
-        words = q.split()
-        if "create" in words:
-            idx = words.index("create")
-            if idx + 1 < len(words):
-                name = words[idx + 1]
+    # ---------------- 1. Detect location ----------------
+    username = getpass.getuser()
 
-    if not name:
-        return "Please tell me the file name."
-
-    # Remove unwanted words
-    name = name.replace("file", "").strip()
-    
-    # Add default extension if not provided
-    if "." not in name:
-        name += ".txt"
-
-    # 2️⃣ Detect location
-    # SPEECH → PATH mapping
-    username = os.getlogin()
     locations = {
-        "desktop": fr"C:\Users\{username}\Desktop",
-        "documents": fr"C:\Users\{username}\Documents",
-        "downloads": fr"C:\Users\{username}\Downloads",
-        "c drive": r"C:\\",
-        "d drive": r"D:\\",
+        "desktop": f"C:\\Users\\{username}\\Desktop",
+        "documents": f"C:\\Users\\{username}\\Documents",
+        "downloads": f"C:\\Users\\{username}\\Downloads",
+        "c drive": "C:\\",
+        "d drive": "D:\\"
     }
 
     folder_path = None
-    for word, path in locations.items():
-        if word in q:
+    for key, path in locations.items():
+        if key in q:
             folder_path = path
+            q = q.replace(key, "")  # REMOVE location from sentence
             break
 
-    # If no location specified → default to Desktop
-    if folder_path is None:
-        folder_path = fr"C:\Users\{username}\Desktop"
+    # Default to Desktop
+    if not folder_path:
+        folder_path = f"C:\\Users\\{username}\\Desktop"
 
-    # 3️⃣ Create the file
+    # Prevent root C drive writing
+    if folder_path in ["C:\\", "D:\\"]:
+        return "For security reasons, files cannot be created directly in drive root."
+
+    # ---------------- 2. Extract filename ----------------
+    name = q.replace("create", "").replace("file", "").replace("named", "").replace("called", "")
+    name = name.strip()
+
+    # Remove invalid characters
+    name = re.sub(r'[\\/:*?"<>|]', '', name)
+
+    if not name:
+        return "Please specify a valid file name."
+
+    if "." not in name:
+        name += ".txt"
+
+    # ---------------- 3. Create file ----------------
     file_path = os.path.join(folder_path, name)
 
     try:
         with open(file_path, "w") as f:
-            f.write("")  # empty file
-        return f"Created file {name} in {folder_path}."
+            f.write("")
+        return f"File '{name}' created successfully in {folder_path}."
+
     except Exception as e:
-        return f"Could not create the file: {e}"
+        return f"Failed to create file: {e}"
 
 def google_search(query):
     text = query.lower().replace("google", "").replace("search", "").strip()

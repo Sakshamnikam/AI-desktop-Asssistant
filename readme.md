@@ -21,6 +21,7 @@ You can say commands like:
 * Open Command Prompt
 * Close current window
 * Open Any Folder or Drive
+* Open camera and click photo
 
 ### ⏱️ Utility Commands
 

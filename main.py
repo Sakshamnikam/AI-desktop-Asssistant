@@ -4,6 +4,7 @@ from aibrain import ask_ai
 
 # 🔹 REQUIRED FOR GUI CONTROL
 assistant_running = False
+WAKE_WORD = "hey pixel"
 
 
 def handle_query(q):
@@ -87,30 +88,38 @@ def run_assistant(log_callback=None):
     assistant_running = True
 
     calibrate_mic()
+    awake = False
 
     if log_callback:
-        log_callback("Pixel: Hi, I am Pixel!")
-    speak("Hi, I am Pixel!")
+        log_callback("Pixel is ready. Say 'Hey Pixel' to activate.")
 
     while assistant_running:
         query = listen()
-
-        # 🔴 FIXED: handle unrecognized speech properly
         if not query:
-            if log_callback:
-                log_callback("Pixel: I didn't catch that, please repeat.")
-            speak("I didn't catch that, please repeat.")
             continue
 
+        query = query.lower()
+
+        # 💤 SLEEP MODE
+        if not awake:
+            if "hey pixel" in query:
+                awake = True
+                speak("Yes, I am listening.")
+                if log_callback:
+                    log_callback("🟢 Wake word detected")
+            continue
+
+        # 🛑 EXIT / SLEEP COMMAND
+        if any(word in query for word in ["bye", "stop", "sleep", "exit"]):
+            speak("Okay, going to sleep.")
+            awake = False
+            if log_callback:
+                log_callback("🔴 Assistant sleeping")
+            continue
+
+        # 🟢 NORMAL COMMAND MODE
         if log_callback:
             log_callback(f"You: {query}")
-
-        if "quit" in query.lower() or "bye" in query.lower():
-            if log_callback:
-                log_callback("Pixel: Goodbye!")
-            speak("Goodbye!")
-            assistant_running = False
-            break
 
         response = handle_query(query)
 
@@ -118,6 +127,8 @@ def run_assistant(log_callback=None):
             log_callback(f"Pixel: {response}")
 
         speak(response)
+
+
 
 
 # 🔹 GUI STOP BUTTON

@@ -20,7 +20,7 @@ def ask_ai(question):
                     )
                 }
             ] + conversation_history,
-            max_tokens=150,
+            max_tokens=800,
             temperature=0.6
         )
 
@@ -34,8 +34,8 @@ def ask_ai(question):
         )
 
         # limit long answers
-        if len(message) > 250:
-            message = message[:250]
+        if len(message) > 8000:
+            message = message[:8000]
 
         conversation_history.append({"role": "assistant", "content": message})
         return message

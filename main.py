@@ -48,12 +48,18 @@ def handle_query(q):
     if "timer" in q:
         return set_timer(q)
 
-    if "create" in q:
+    create_keywords = [
+    "create file",
+    "make file",
+    "new file",
+    "create a file"
+]
+    if any(kw in q for kw in create_keywords):
         return create_file(q)
 
 
     # 🔴 FIXED: Google search ONLY when user explicitly asks to search
-    if q.startswith("google ") or q.startswith("search "):
+    if q.startswith(("google ", "search ")):
         return google_search(q)
 
     if "open spotify" in q or "start spotify" in q:
@@ -65,7 +71,7 @@ def handle_query(q):
     if "open" in q and ("folder" in q or "drive" in q):
         return open_folder(q)
     
-    if "take a picture" in q or "take picture" in q or "take photo" in q or "click photo" in q:
+    if "take a picture" in q or "take picture" in q or "take a photo" in q or "click photo" in q:
         return take_picture()
 
     if "open camera" in q or "turn on camera" in q or "start camera" in q:

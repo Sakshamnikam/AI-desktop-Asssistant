@@ -168,7 +168,7 @@ def google_search(query):
     if not text:
         return "What do you want me to search on Google?"
     webbrowser.open("https://www.google.com/search?q=" + urllib.parse.quote(text))
-    return f"Searching Google for {text}"
+    return f"Searching Google  {text}"
 
 
 def open_spotify():

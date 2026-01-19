@@ -11,40 +11,41 @@ app = ctk.CTk()
 app.title("Pixel AI Assistant")
 app.geometry("760x720")
 app.resizable(False, False)
+app.configure(fg_color="#0f1115")
 
 # ---------------- HEADER ----------------
-header = ctk.CTkFrame(app, height=60)
-header.pack(fill="x", padx=10, pady=(10, 5))
+header = ctk.CTkFrame(app, height=52, fg_color="#0f1115")
+header.pack(fill="x")
 
 logo = ctk.CTkImage(
     light_image=Image.open("pixel_logo.png"),
     dark_image=Image.open("pixel_logo.png"),
-    size=(42, 42)
+    size=(36, 36)
 )
 
-ctk.CTkLabel(header, image=logo, text="").pack(side="left", padx=10)
+ctk.CTkLabel(header, image=logo, text="").pack(side="left", padx=(12, 8))
 
 ctk.CTkLabel(
     header,
     text="Pixel AI Assistant",
-    font=("Segoe UI", 22, "bold")
+    font=("Segoe UI Semibold", 18)
 ).pack(side="left")
 
 status_label = ctk.CTkLabel(
     header,
     text="● Idle",
-    font=("Segoe UI", 14),
-    text_color="orange"
+    font=("Segoe UI", 12),
+    text_color="#facc15"
 )
-status_label.pack(side="right", padx=15)
+status_label.pack(side="right", padx=14)
 
 # ---------------- CHAT AREA ----------------
 chat_frame = ctk.CTkScrollableFrame(
     app,
-    corner_radius=12,
-    fg_color="#1e1e1e"
+    fg_color="#161a20",
+    corner_radius=12
 )
-chat_frame.pack(fill="both", expand=True, padx=12, pady=8)
+chat_frame.pack(fill="both", expand=True, padx=12, pady=(10, 8))
 
 def add_message(text, sender="pixel"):
     is_user = sender == "user"
@@ -60,8 +61,8 @@ def add_message(text, sender="pixel"):
     if is_code:
         bubble = ctk.CTkFrame(
             row,
-            fg_color="#2b2b2b",
-            corner_radius=16
+            fg_color="#1e293b",
+            corner_radius=14
         )
         bubble.pack(anchor="e" if is_user else "w")
 
@@ -71,7 +72,7 @@ def add_message(text, sender="pixel"):
             bubble,
             width=520,
             height=preview_height,
-            wrap="word",
+            wrap="none",
             font=("Consolas", 13),
             fg_color="transparent",
             border_width=0
@@ -82,7 +83,7 @@ def add_message(text, sender="pixel"):
 
         def toggle():
             if textbox.cget("height") == preview_height:
-                textbox.configure(height=300)
+                textbox.configure(height=320)
                 toggle_btn.configure(text="Collapse")
             else:
                 textbox.configure(height=preview_height)
@@ -93,9 +94,9 @@ def add_message(text, sender="pixel"):
             text="Expand",
             width=80,
             height=26,
-            font=("Segoe UI", 12),
-            fg_color="#3a3a3a",
-            hover_color="#4a4a4a",
+            font=("Segoe UI", 11),
+            fg_color="#334155",
+            hover_color="#475569",
             command=toggle
         )
         toggle_btn.pack(anchor="e", padx=10, pady=(0, 8))
@@ -111,26 +112,29 @@ def add_message(text, sender="pixel"):
             corner_radius=16,
             padx=14,
             pady=10,
-            fg_color="#1f6aa5" if is_user else "#2b2b2b"
+            fg_color="#2563eb" if is_user else "#23272f"
         )
         bubble.pack(anchor="e" if is_user else "w")
 
     chat_frame.update_idletasks()
     chat_frame._parent_canvas.yview_moveto(1.0)
 
-# Welcome
+# Welcome message
 add_message("Hi! I am Pixel 🤖\nHow can I help you today?")
 
 # ---------------- INPUT AREA ----------------
-input_frame = ctk.CTkFrame(app)
-input_frame.pack(fill="x", padx=12, pady=(6, 4))
+input_frame = ctk.CTkFrame(app, fg_color="#0f1115")
+input_frame.pack(fill="x", padx=12, pady=(4, 6))
 
 user_entry = ctk.CTkEntry(
     input_frame,
     placeholder_text="Type your message...",
-    font=("Segoe UI", 14)
+    height=40,
+    font=("Segoe UI", 14),
+    fg_color="#161a20",
+    border_color="#2a2f3a"
 )
-user_entry.pack(side="left", fill="x", expand=True, padx=(6, 8))
+user_entry.pack(side="left", fill="x", expand=True, padx=(0, 8))
 
 def send_message():
     query = user_entry.get().strip()
@@ -139,13 +143,14 @@ def send_message():
 
     add_message(query, "user")
     user_entry.delete(0, "end")
+    user_entry.focus()
 
-    status_label.configure(text="● Thinking", text_color="yellow")
+    status_label.configure(text="● Thinking", text_color="#38bdf8")
 
     def process():
         response = handle_query(query)
         add_message(response, "pixel")
-        status_label.configure(text="● Idle", text_color="orange")
+        status_label.configure(text="● Idle", text_color="#facc15")
 
     threading.Thread(target=process, daemon=True).start()
 
@@ -155,12 +160,37 @@ ctk.CTkButton(
     input_frame,
     text="Send",
     width=90,
+    height=40,
+    font=("Segoe UI Semibold", 13),
+    fg_color="#3b82f6",
+    hover_color="#2563eb",
     command=send_message
-).pack(side="right", padx=6)
+).pack(side="right")
 
 # ---------------- CONTROLS ----------------
-controls = ctk.CTkFrame(app)
-controls.pack(pady=(6, 12))
+controls = ctk.CTkFrame(app, fg_color="#0f1115")
+controls.pack(fill="x", pady=(0, 10))
+
+btn_cfg = dict(height=34, font=("Segoe UI", 12))
+
+ctk.CTkButton(controls, text="🎤 Start", width=120, **btn_cfg,
+              command=lambda: threading.Thread(
+                  target=run_assistant,
+                  args=(lambda msg: add_message(msg.replace("Pixel:", ""), "pixel"),),
+                  daemon=True).start()
+              ).pack(side="left", padx=6)
+
+ctk.CTkButton(controls, text="⏹ Stop", width=100, fg_color="#dc2626",
+              hover_color="#b91c1c", **btn_cfg,
+              command=stop_assistant).pack(side="left", padx=6)
+
+ctk.CTkButton(controls, text="🧹 Clear", width=110, fg_color="#334155",
+              hover_color="#475569", **btn_cfg,
+              command=lambda: [w.destroy() for w in chat_frame.winfo_children()] or
+              add_message("Chat cleared. How can I help?")
+              ).pack(side="left", padx=6)
+
+app.mainloop()
 
 def start_voice():
     status_label.configure(text="● Listening", text_color="green")
@@ -172,18 +202,14 @@ def start_voice():
         daemon=True
     ).start()
 
+
 def stop_voice():
     stop_assistant()
     status_label.configure(text="● Stopped", text_color="red")
     add_message("Assistant stopped.")
 
+
 def clear_chat():
     for w in chat_frame.winfo_children():
         w.destroy()
     add_message("Chat cleared. How can I help?")
-
-ctk.CTkButton(controls, text="🎤 Start", width=160, command=start_voice).grid(row=0, column=0, padx=8)
-ctk.CTkButton(controls, text="⏹ Stop", width=120, fg_color="#c0392b", command=stop_voice).grid(row=0, column=1, padx=8)
-ctk.CTkButton(controls, text="🧹 Clear", width=140, fg_color="#566573", command=clear_chat).grid(row=0, column=2, padx=8)
-
-app.mainloop()

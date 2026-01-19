@@ -118,8 +118,7 @@ Say **"bye"** or **"quit"** to exit.
 * "Close Current Window"
 * "Open Notepad"
 * "Open Spotify"
-* "Turn on Camera"
-* "Click photo"
+* "Turn on Camera and Click photo"
 * Pixel can answer any General Knowledge questions for ex- What is artificial intelligence?"
 
 ---
@@ -134,10 +133,13 @@ Say **"bye"** or **"quit"** to exit.
 
 ## 🚀 Future Improvements
 
-* Wake word support ("Hey Pixel")
+* Multi-language voice support
 * Linux & macOS support
 * App control (VS Code)
 * Persistent conversation memory
+* Auto-update mechanism
+* Interrupt speech mid-response
+* Session save / load
 
 ---
 

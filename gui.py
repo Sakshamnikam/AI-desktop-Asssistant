@@ -173,7 +173,6 @@ def start_voice():
     global assistant_listening
     assistant_listening = True
     set_status("● Listening", "green")
-    add_message("🎤 Pixel is listening. Say 'Hey Pixel'")
 
     threading.Thread(
         target=run_assistant,

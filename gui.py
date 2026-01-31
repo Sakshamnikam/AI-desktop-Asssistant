@@ -3,6 +3,13 @@ import threading
 from main import run_assistant, stop_assistant, handle_query
 from PIL import Image
 
+# ---------------- STATE ----------------
+assistant_listening = False
+
+# ---------------- SAFE UI HELPERS ----------------
+def set_status(text, color):
+    app.after(0, lambda: status_label.configure(text=text, text_color=color))
+
 # ---------------- APP CONFIG ----------------
 ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("blue")
@@ -49,25 +56,16 @@ chat_frame.pack(fill="both", expand=True, padx=12, pady=(10, 8))
 
 def add_message(text, sender="pixel"):
     is_user = sender == "user"
-    is_code = (
-        "```" in text or
-        text.strip().startswith("<") or
-        len(text) > 300
-    )
+    is_code = "```" in text or len(text) > 300
 
     row = ctk.CTkFrame(chat_frame, fg_color="transparent")
     row.pack(fill="x", padx=10, pady=6)
 
     if is_code:
-        bubble = ctk.CTkFrame(
-            row,
-            fg_color="#1e293b",
-            corner_radius=14
-        )
+        bubble = ctk.CTkFrame(row, fg_color="#1e293b", corner_radius=14)
         bubble.pack(anchor="e" if is_user else "w")
 
         preview_height = 140
-
         textbox = ctk.CTkTextbox(
             bubble,
             width=520,
@@ -119,7 +117,6 @@ def add_message(text, sender="pixel"):
     chat_frame.update_idletasks()
     chat_frame._parent_canvas.yview_moveto(1.0)
 
-# Welcome message
 add_message("Hi! I am Pixel 🤖\nHow can I help you today?")
 
 # ---------------- INPUT AREA ----------------
@@ -145,12 +142,13 @@ def send_message():
     user_entry.delete(0, "end")
     user_entry.focus()
 
-    status_label.configure(text="● Thinking", text_color="#38bdf8")
+    set_status("● Thinking", "#38bdf8")
 
     def process():
         response = handle_query(query)
-        add_message(response, "pixel")
-        status_label.configure(text="● Idle", text_color="#facc15")
+        app.after(0, lambda: add_message(response, "pixel"))
+        if not assistant_listening:
+            set_status("● Idle", "#facc15")
 
     threading.Thread(target=process, daemon=True).start()
 
@@ -167,49 +165,36 @@ ctk.CTkButton(
     command=send_message
 ).pack(side="right")
 
-# ---------------- CONTROLS ----------------
+# ---------------- VOICE CONTROLS ----------------
 controls = ctk.CTkFrame(app, fg_color="#0f1115")
 controls.pack(fill="x", pady=(0, 10))
 
-btn_cfg = dict(height=34, font=("Segoe UI", 12))
-
-ctk.CTkButton(controls, text="🎤 Start", width=120, **btn_cfg,
-              command=lambda: threading.Thread(
-                  target=run_assistant,
-                  args=(lambda msg: add_message(msg.replace("Pixel:", ""), "pixel"),),
-                  daemon=True).start()
-              ).pack(side="left", padx=6)
-
-ctk.CTkButton(controls, text="⏹ Stop", width=100, fg_color="#dc2626",
-              hover_color="#b91c1c", **btn_cfg,
-              command=stop_assistant).pack(side="left", padx=6)
-
-ctk.CTkButton(controls, text="🧹 Clear", width=110, fg_color="#334155",
-              hover_color="#475569", **btn_cfg,
-              command=lambda: [w.destroy() for w in chat_frame.winfo_children()] or
-              add_message("Chat cleared. How can I help?")
-              ).pack(side="left", padx=6)
-
-app.mainloop()
-
 def start_voice():
-    status_label.configure(text="● Listening", text_color="green")
-    add_message("🎤 Listening... Say 'Hey Pixel'")
+    global assistant_listening
+    assistant_listening = True
+    set_status("● Listening", "green")
+    add_message("🎤 Pixel is listening. Say 'Hey Pixel'")
 
     threading.Thread(
         target=run_assistant,
-        args=(lambda msg: add_message(msg.replace("Pixel:", ""), "pixel"),),
+        args=(lambda msg: app.after(0, lambda: add_message(msg.replace("Pixel:", ""), "pixel")),),
         daemon=True
     ).start()
 
-
 def stop_voice():
+    global assistant_listening
+    assistant_listening = False
     stop_assistant()
-    status_label.configure(text="● Stopped", text_color="red")
+    set_status("● Stopped", "red")
     add_message("Assistant stopped.")
-
 
 def clear_chat():
     for w in chat_frame.winfo_children():
         w.destroy()
     add_message("Chat cleared. How can I help?")
+
+ctk.CTkButton(controls, text="🎤 Start", width=120, command=start_voice).pack(side="left", padx=6)
+ctk.CTkButton(controls, text="⏹ Stop", width=100, fg_color="#dc2626", command=stop_voice).pack(side="left", padx=6)
+ctk.CTkButton(controls, text="🧹 Clear", width=110, fg_color="#334155", command=clear_chat).pack(side="left", padx=6)
+
+app.mainloop()

@@ -58,17 +58,29 @@ def add_message(text, sender="pixel"):
     is_user = sender == "user"
     is_code = "```" in text or len(text) > 300
 
+    # Full-width row
     row = ctk.CTkFrame(chat_frame, fg_color="transparent")
     row.pack(fill="x", padx=10, pady=6)
 
+    # Alignment container (content-width only)
+    align = ctk.CTkFrame(row, fg_color="transparent")
+    align.pack(
+        anchor="e" if is_user else "w",
+        padx=(20, 0) if is_user else (0, 20)
+    )
+
     if is_code:
-        bubble = ctk.CTkFrame(row, fg_color="#1e293b", corner_radius=14)
-        bubble.pack(anchor="e" if is_user else "w")
+        bubble = ctk.CTkFrame(
+            align,
+            fg_color="#1e293b",
+            corner_radius=14
+        )
+        bubble.pack()
 
         preview_height = 140
         textbox = ctk.CTkTextbox(
             bubble,
-            width=520,
+            width=480,
             height=preview_height,
             wrap="none",
             font=("Consolas", 13),
@@ -101,9 +113,9 @@ def add_message(text, sender="pixel"):
 
     else:
         bubble = ctk.CTkLabel(
-            row,
+            align,   # ✅ CORRECT PARENT
             text=text,
-            wraplength=520,
+            wraplength=480,
             justify="left",
             anchor="w",
             font=("Segoe UI", 14),
@@ -112,10 +124,11 @@ def add_message(text, sender="pixel"):
             pady=10,
             fg_color="#2563eb" if is_user else "#23272f"
         )
-        bubble.pack(anchor="e" if is_user else "w")
+        bubble.pack()
 
     chat_frame.update_idletasks()
     chat_frame._parent_canvas.yview_moveto(1.0)
+
 
 add_message("Hi! I am Pixel 🤖\nHow can I help you today?")
 
